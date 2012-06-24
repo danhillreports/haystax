@@ -86,7 +86,10 @@
     "dom-ascend": "Ascend to parent element",
     "dom-descend": "Descend to child element",
     "uproot": "Publish your remix",
-    "bug-report": "Report a bug"
+    "bug-report": "Report a bug",
+    "field-extract": "Extract as a field",
+    "field-detail": "Follow link to create a detailed field",
+    "table-extract": "Extract a whole table"
   },
   "short-command-descriptions": {
     "help": "help",
