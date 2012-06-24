@@ -263,7 +263,7 @@
       self.add({
         click: function(event) {
           if (isValidFocusTarget(event.target)) {
-            self.commandBindings['remix'].execute();
+            self.commandBindings['field-extract'].execute();
             return true;
           }
         },
