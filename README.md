@@ -1,3 +1,9 @@
+## DISCLAIMER
+
+The rest of this README is about the Hackasaurus X-Ray Goggles. That, obviously, should change.
+
+## That old stuff
+
 These are Web X-Ray Goggles, which provide a simple, easy way for non-technical people to inspect Web pages and learn about how they are put together.
 
 To play with the current version of the goggles, check out [https://secure.toolness.com/webxray/][].
