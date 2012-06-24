@@ -338,7 +338,7 @@
             if (onQuit) onQuit();
           }
         },
-        {
+        /*{
           key: 'R',
           cmd: 'remix',
           execute: function() {
@@ -359,7 +359,7 @@
           execute: function() {
             mixMaster.deleteFocusedElement();
           }
-        },
+        },*/
         {
           key: 'LEFT',
           cmd: 'undo',
@@ -384,7 +384,7 @@
             focused.downfocus();
           }
         },
-        {
+        /*{
           key: 'B',
           cmd: 'bug-report',
           alwaysInToolbar: true,
@@ -405,6 +405,31 @@
           key: 'I',
           execute: function() {
             mixMaster.infoForFocusedElement();
+          }
+        },*/
+        {
+          key: 'F',
+          cmd: 'field-extract',
+          execute: function () {
+          }
+        },
+        {
+          key: 'D',
+          cmd: 'field-detail',
+          execute: function () {
+          }
+        },
+        {
+          key: 'P',
+          cmd: 'page',
+          execute: function () {
+          }
+        },
+        {
+          key: 'T',
+          cmd: 'table-extract',
+          execute: function () {
+            mixMaster.extractTable();
           }
         }
       ]);
