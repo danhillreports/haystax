@@ -138,8 +138,8 @@
       setDialogPageMods: function(mods) {
         dialogPageMods = mods;
       },
-      extractTable: function() {
-        var focusedElement =  focused.getPrimaryElement();
+      extractTable: function(element) {
+        var focusedElement = element || focused.getPrimaryElement();
         if (!focusedElement)
           return;
 
@@ -148,108 +148,106 @@
         }
         if(!focusedElement)
           return;
+        
+        focused.set(focusedElement);
+        
+        $.webxraySettings.session.table = $(focusedElement)
+          .xpath(focusedElement.ownerDocument.body);
+        $.webxraySettings.save();
 
         var result = $(focusedElement).find('tr').map(function() {
           var row = $(this).find('td').map(function() {
             if ($(this).attr('colspan')) { return []; }
-            return this.innerText;
+            return '"' + this.innerText.trim().replace('"', '""') + '"';
           }).get();
           return [row];
         }).get();
 
         var csv = result.map(function (row) {
-          return row.join('\t');
+          return row.join(',');
         }).join('\n');
-        var uriContent = "data:text/csv;charset=UTF=8," +
-          encodeURIComponent(csv);
-        var saveWindow = window.open(uriContent, 'saveTable')
+        return csv + '\n';
       },
-      replaceFocusedElementWithDialog: function(options) {
-        var input = options.input;
-        var dialogURL = options.dialogURL;
-        var sendFullDocument = options.sendFullDocument;
-        var MAX_HTML_LENGTH = 5000;
-        var focusedElement =  focused.getPrimaryElement();
+      markPage: function() {
+        var focusedElement = focused.getPrimaryElement();
         if (!focusedElement)
           return;
 
-        // We need to remove any script tags in the element now, or else
-        // we'll likely re-execute them.
-        $(focusedElement).find("script").remove();
+        var xpath = $(focusedElement).xpath(document.body);
+        $.webxraySettings.session.page = xpath;
+        $.webxraySettings.save();
 
-        var focusedHTML = $(focusedElement).outerHtml();
-
-        if ($(focusedElement).is('html, body')) {
-          var msg = l10n("too-big-to-change");
-          jQuery.transparentMessage($('<div></div>').text(msg));
-          return;
+        var href = document.location.href;
+        while(focusedElement && focusedElement.tagName != 'A') {
+          focusedElement = focusedElement.parentNode;
         }
+        $.webxraySettings.session.page = $(focusedElement).filter('a')
+          .xpath(focusedElement.ownerDocument.body)
+        $.webxraySettings.save();
+      },
+      scrape: function () {
+        jQuery.modalDialog({
+          input: input,
+          body: options.body,
+          url: dialogURL,
+          element: focusedElement,
+          onLoad: function(dialog) {
+            dialog.iframe.postMessage(JSON.stringify({
+              languages: jQuery.locale.languages,
+              startHTML: startHTML,
+              mods: dialogPageMods,
+              baseURI: document.location.href
+            }), "*");
+            dialog.iframe.fadeIn();
+            dialog.iframe.bind("message", function onMessage(event, data) {
+              if (data && data.length && data[0] == '{') {
+                var data = JSON.parse(data);
+                if (data.msg == "ok") {
+                  // The dialog may have decided to replace all our spaces
+                  // with non-breaking ones, so we'll undo that.
+                  var html = data.endHTML.replace(/\u00a0/g, " ");
+                  var newContent = self.replaceElement(focusedElement, html);
 
-        if (focusedHTML.length == 0 ||
-            focusedHTML.length > MAX_HTML_LENGTH) {
-          var tagName = focusedElement.nodeName.toLowerCase();
-          var msg = l10n("too-big-to-remix-html").replace("${tagName}",
-                                                          tagName);
-          jQuery.transparentMessage($(msg));
-          return;
-        }
-
-        if (sendFullDocument) {
-          $(document).uprootIgnoringWebxray(function (html) {
-            begin({
-              html: html,
-              selector: $(document.body).pathTo(focused.getPrimaryElement())
-            });
-          });
-        } else
-          begin(focusedHTML);
-
-        function begin(startHTML) {
-          focused.unfocus();
-          $(focusedElement).addClass('webxray-hidden');
-
-          jQuery.morphElementIntoDialog({
-            input: input,
-            body: options.body,
-            url: dialogURL,
-            element: focusedElement,
-            onLoad: function(dialog) {
-              dialog.iframe.postMessage(JSON.stringify({
-                languages: jQuery.locale.languages,
-                startHTML: startHTML,
-                mods: dialogPageMods,
-                baseURI: document.location.href
-              }), "*");
-              dialog.iframe.fadeIn();
-              dialog.iframe.bind("message", function onMessage(event, data) {
-                if (data && data.length && data[0] == '{') {
-                  var data = JSON.parse(data);
-                  if (data.msg == "ok") {
-                    // The dialog may have decided to replace all our spaces
-                    // with non-breaking ones, so we'll undo that.
-                    var html = data.endHTML.replace(/\u00a0/g, " ");
-                    var newContent = self.replaceElement(focusedElement, html);
-
-                    newContent.addClass('webxray-hidden');
-                    $(focusedElement).removeClass('webxray-hidden');
-                    jQuery.morphDialogIntoElement({
-                      dialog: dialog,
-                      input: input,
-                      element: newContent,
-                      onDone: function() {
-                        newContent.reallyRemoveClass('webxray-hidden');
-                      }
-                    });
-                  } else {
-                    // TODO: Re-focus previously focused elements?
-                    $(focusedElement).reallyRemoveClass('webxray-hidden');
-                    dialog.close();
-                  }
+                  newContent.addClass('webxray-hidden');
+                  $(focusedElement).removeClass('webxray-hidden');
+                  jQuery.morphDialogIntoElement({
+                    dialog: dialog,
+                    input: input,
+                    element: newContent,
+                    onDone: function() {
+                      newContent.reallyRemoveClass('webxray-hidden');
+                    }
+                  });
+                } else {
+                  // TODO: Re-focus previously focused elements?
+                  $(focusedElement).reallyRemoveClass('webxray-hidden');
+                  dialog.close();
                 }
-              });
-            }
+              }
+            });
+          }
+        });
+      },
+      showSaveDialog: function(options) {
+        var input = options.input;
+        var dialogURL = options.dialogURL;
+
+        var dialog = jQuery.modalDialog({
+          input: input,
+          body: options.body,
+          url: dialogURL
+        });
+
+        dialog.iframe.one("load", function () {
+          dialog.iframe.postMessage(JSON.stringify({
+            languages: jQuery.locale.languages,
+            csv: options.csv
+          }), "*");
+          dialog.iframe.fadeIn();
+          dialog.iframe.bind("message", function onMessage(event, data) {
+            dialog.close();
           });
-        }
+        });
       }
     };
     return self;

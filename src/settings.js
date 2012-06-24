@@ -24,6 +24,7 @@
     preferencesURL: "preferences.html",
     easyRemixDialogURL: "easy-remix-dialog/index.html",
     uprootDialogURL: "uproot-dialog.html",
+    saveDialogURL: "save-dialog.html",
     bugReportDialogURL: "bug-report-dialog.html",
     hackpubURL: "http://hackpub.hackasaurus.org/",
     bugReportHackpubURL: "http://hackpub.hackasaurus.org/buckets/webxray-bugs/",

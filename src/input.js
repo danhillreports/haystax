@@ -335,6 +335,8 @@
           cmd: 'quit',
           alwaysInToolbar: true,
           execute: function() {
+            jQuery.webxraySettings.session = {}
+            jQuery.webxraySettings.save()
             if (onQuit) onQuit();
           }
         },
@@ -421,8 +423,9 @@
         },
         {
           key: 'P',
-          cmd: 'page',
+          cmd: 'page-mark',
           execute: function () {
+            mixMaster.markPage();
           }
         },
         {
@@ -430,6 +433,73 @@
           cmd: 'table-extract',
           execute: function () {
             mixMaster.extractTable();
+          }
+        },
+        {
+          key: 'S',
+          cmd: 'scrape',
+          execute: function () {
+            var session = $.webxraySettings.session;
+            var count = 0
+              , page = session.page
+              , table = session.table
+              , result = '';
+
+            var scrape = function (document) {
+              var statusMsg = $("<div></div>")
+                .html(
+                  jQuery.locale.get("hud-overlay:status-count-html")
+                    .replace('__count__', ++count));
+              $.transparentMessage(statusMsg);
+
+              var _t = $(document.body).nodeFromXPath(table[0]);
+              if (!_t.length) return;
+              result += mixMaster.extractTable(_t[0]);
+              if (page) {
+                var _p = $(document.body).nodeFromXPath(page[0]);
+                if (!_p.length) return;
+
+                var finish = jQuery.Deferred();
+                $.get(_p[0].href, function (data) {
+                  $('<iframe></iframe>')
+                    .css('display', 'none')
+                    .appendTo(document.body)
+                    .each(function () {
+                      var _f = this;
+                      var _d = _f.contentDocument;
+                      _d.open();
+                      _d.close();
+                      _d.write(data);
+
+                      finish.done(function () {
+                        $(_f).remove();
+                      })
+
+                      var next = scrape(_d);
+                      if (next) {
+                        next.done(function () {
+                          finish.resolve();
+                        })
+                      } else {
+                        finish.resolve();
+                      }
+                    });
+                }).error(function () { finish.resolve(); })
+
+                return finish;
+              }
+            }
+            scrape(document).done(function () {
+              var statusMsg = $("<div></div>")
+                .html(jQuery.locale.get("hud-overlay:status-done-html"));
+              $.transparentMessage(statusMsg);
+
+              mixMaster.showSaveDialog({
+                input: self,
+                csv: result,
+                dialogURL: jQuery.webxraySettings.url("saveDialogURL")
+              });
+            });
           }
         }
       ]);

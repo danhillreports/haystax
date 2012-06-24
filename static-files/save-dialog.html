@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Save Your Data</title>
+<link rel="stylesheet" href="dialog-common/stylesheets/base.css">
+<style>
+.big-button {
+  display: inline-block;
+  width: 200px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f8a339;
+  font-style: italic;
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.big-button:after {
+  content: ' »';
+}
+
+.big-button:hover {
+  background-color: #ffc833;
+}
+</style>
+<div class="container">
+<div id="buttons">
+  <div class="close-button" id="close"
+   data-l10n="dialog-common:close">Close</div>
+</div>
+<div id="header"><h1 class="title"><span data-l10n="dialog-common:product-name">Haystax Extractor</span> <span class="subtitle" data-l10n="header">Save Your Data</span></h1></div>
+<div id="sample-csv" style="display: none;">
+<a id="save" data-l10n="save-dialog:save">Download</a>
+</div>
+</div>
+<script src="jquery.min.js"></script>
+<script src="src/localization.js"></script>
+<script>
+
+function init(csv) {
+  $('#save')
+    .attr('href', 'data:text/csv;charset=UTF=8,' + encodeURIComponent(csv))
+    .attr('download', 'data.csv')
+    .addClass('big-button')
+    .appendTo('.container');
+}
+
+function loadLocalization(languages, cb) {
+  jQuery.localization.loadLocale({
+    languages: languages,
+    path: "src/locale/",
+    complete: function(locale) {
+      $(document.body).localize(locale, "save-dialog");
+      cb();
+    }
+  });
+}
+
+if (top === self) {
+  // We're not in an iframe, so we're being used for development.
+  $(window).ready(function() {
+    var csv = $("#sample-csv").text();
+    loadLocalization(["en", "es"], function() {
+      init(csv);
+    });
+  });
+} else {
+  window.addEventListener("message", function(event) {
+    $("#close").click(function() {
+      window.parent.postMessage("close", "*");
+    });  
+    var data = JSON.parse(event.data);
+    loadLocalization(data.languages, function() {
+      init(data.csv);
+    });
+  }, false);
+}
+</script>

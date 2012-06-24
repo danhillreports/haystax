@@ -1,6 +1,8 @@
 {
   "hud-overlay": {
-    "default-html": "<span>Web X-Ray Goggles activated! Press ESC to deactivate.</span>",
+    "default-html": "<span>Haystax activated! Press ESC to deactivate.</span>",
+    "status-count-html": "<span>Scraping page __count__...</span>",
+    "status-done-html": "<span>Done!</span>",
     "element": "element",
     "with": "with",
     "id": "id",
@@ -27,10 +29,10 @@
     "replacement": "replacement"
   },
   "dialog-common": {
-    "ok": "Commit changes",
+    "ok": "OK",
     "nevermind": "Nevermind",
     "close": "Close",
-    "product-name": "X-Ray Goggles"
+    "product-name": "Haystax"
   },
   "mix-master-dialog": {
     "html-header": "HTML Source Code",
@@ -39,6 +41,11 @@
     "basic-source-tab": "Basic",
     "advanced-source-tab": "Advanced",
     "title": "Remixer"
+  },
+  "save-dialog": {
+    "header": "Save Your Data",
+    "intro": "Your data will be saved as a CSV file.",
+    "save": "Download"
   },
   "uproot-dialog": {
     "header": "Publish Your Remix",
@@ -89,7 +96,8 @@
     "bug-report": "Report a bug",
     "field-extract": "Extract as a field",
     "field-detail": "Follow link to create a detailed field",
-    "table-extract": "Extract a whole table"
+    "table-extract": "Extract a whole table",
+    "page-mark": "Mark a link to the next page"
   },
   "short-command-descriptions": {
     "help": "help",
