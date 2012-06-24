@@ -49,6 +49,7 @@
   , "src/touch-toolbar.js"
   , "src/blur-indicator.js"
   , "src/ui.js"
+  , "src/xpath.js"
   , "src/main.js"
   , "src/outro.js"
   ]
