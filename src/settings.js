@@ -28,6 +28,7 @@
     hackpubURL: "http://hackpub.hackasaurus.org/",
     bugReportHackpubURL: "http://hackpub.hackasaurus.org/buckets/webxray-bugs/",
     hackpubInjectionURL: "published-hack/injector.js",
-    pluginURLs: []
+    pluginURLs: [],
+    session: {}
   };
 })(jQuery);

@@ -55,10 +55,14 @@
     window.addEventListener('message', function onMessage(event) {
       if (event.source == iframe.contentWindow) {
         window.removeEventListener('message', onMessage, false);
-        $(iframe).remove();
         try {
           var prefs = JSON.parse(event.data);
           jQuery.webxraySettings.extend(prefs);
+          jQuery.webxraySettings.save = function() {
+            var data = jQuery.webxraySettings.session;
+            iframe.contentWindow.postMessage(JSON.stringify(data), '*');
+          };
+          jQuery.webxraySettings.save();
         } catch (e) {
           jQuery.warn("loading preferences failed");
           jQuery.warn("preference data is", event.data);

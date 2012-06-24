@@ -4,7 +4,23 @@
 <p>You should never see this window.</p>
 <script>
 if ('webxrayPreferences' in localStorage)
-  window.parent.postMessage(localStorage.webxrayPreferences, "*");
+  preferences = localStorage.webxrayPreferences;
 else
-  window.parent.postMessage("{}", "*");
+  preferences = "{}"
+preferences = JSON.parse(preferences)
+
+if ('webxraySession' in localStorage)
+  session = JSON.parse(localStorage.webxraySession);
+else
+  session = {}
+
+preferences.session = session;
+window.parent.postMessage(JSON.stringify(preferences), "*");
+
+window.addEventListener('message', function onMessage(event) {
+  if (event.source === window.parent) {
+    session = JSON.parse(event.data);
+    localStorage.webxraySession = JSON.stringify(session);
+  }
+});
 </script>
