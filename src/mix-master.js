@@ -138,6 +138,32 @@
       setDialogPageMods: function(mods) {
         dialogPageMods = mods;
       },
+      extractTable: function() {
+        var focusedElement =  focused.getPrimaryElement();
+        if (!focusedElement)
+          return;
+
+        if (focusedElement.tagName != 'TABLE') {
+          focusedElement = $(focusedElement).parents('table').first().get(0)
+        }
+        if(!focusedElement)
+          return;
+
+        var result = $(focusedElement).find('tr').map(function() {
+          var row = $(this).find('td').map(function() {
+            if ($(this).attr('colspan')) { return []; }
+            return this.innerText;
+          }).get();
+          return [row];
+        }).get();
+
+        var csv = result.map(function (row) {
+          return row.join('\t');
+        }).join('\n');
+        var uriContent = "data:text/csv;charset=UTF=8," +
+          encodeURIComponent(csv);
+        var saveWindow = window.open(uriContent, 'saveTable')
+      },
       replaceFocusedElementWithDialog: function(options) {
         var input = options.input;
         var dialogURL = options.dialogURL;
