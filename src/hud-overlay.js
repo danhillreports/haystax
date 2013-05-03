@@ -53,6 +53,7 @@
         }
         
         function elementDesc(element) {
+          // console.log(elementInfo(element)); //shows moused over element
           var span = $("<span></span>");
           var info = elementInfo(element);
           var shortDescKey = "short-element-descriptions:" +

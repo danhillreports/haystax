@@ -1,0 +1,30 @@
+two questions: what do I want from this page? how do I get to other pages?
+
+control parameters... sidebar UI?
+
+be able to stop midscrape/define how many it goes
+
+associate fields to data
+
+---------
+
+Haystax
+
+The fix: Haystax required the user to have marked a link to the next page before it called it's extractTable. I forced Haystax to produce a CSV of one table by also calling the scrape function if no links to next pages are identified.
+
+Haystax only scrapes tables using the extractTable function added to mix-master.js. It also produces csvs as they appear on the HTML table, a csv must be transformed if table fields are shown on the side of the HTML table.
+
+In its current state, Haystax is similar to chrome plugins Table2Clipboard, Table Capture and Scraper. The Reporter's Lab gave all three 1 out of 5 stars because they struggle to scrape multiple pages or cannot handle more complex scraping challenges.
+
+Scraper and Haystax scrape by tracking XPaths to fields and links. However many scrape cases require making requests to forms (https://github.com/sc3/cookcountyjail/blob/master/countyapi/management/commands/scrape_inmates.py#L47). Other times javascript calls obscure POST requests, requiring different workarounds.
+
+The Reporter's Lab identifies four common scraping challenges and has sample data sets for each. Here they are, ordered by difficulty:
+
+	Scrape database in table format *
+	Scrape database of PDF files **
+	Scrape database with form-based search ***
+	Scrape database requiring browser cookies ****
+
+In addition to a scraper's ability to extract data in different scenarios, UI elements should be considered for a tool serving non-programmers. Haystax users could benefit from more visual tools to tell the program what to scrape, a sidebar showing what the program is scraping, or the ability to pause and resume a scrape.
+
+In his review of propriety scraping softwares Helium Scraper and Outwit Hub, David Weisz also notes efficiency and the ability to customize scraping processes distinguish scraping experiences and serve as "computational training wheels" for non-programmers.

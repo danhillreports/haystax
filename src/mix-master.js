@@ -177,7 +177,10 @@
         $.webxraySettings.session.page = xpath;
         $.webxraySettings.save();
 
+        console.log(xpath);
+
         var href = document.location.href;
+        console.log(href);
         while(focusedElement && focusedElement.tagName != 'A') {
           focusedElement = focusedElement.parentNode;
         }
@@ -198,6 +201,7 @@
               mods: dialogPageMods,
               baseURI: document.location.href
             }), "*");
+            console.log(options.body);
             dialog.iframe.fadeIn();
             dialog.iframe.bind("message", function onMessage(event, data) {
               if (data && data.length && data[0] == '{') {
