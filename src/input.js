@@ -413,14 +413,17 @@
           key: 'F',
           cmd: 'field-extract',
           execute: function () {
-            var focusedElement = focused.getPrimaryElement();
-            //return;
+            var dict = {'key': [], 'val': []}
 
-            var xpath = $(focusedElement).xpath(document.body);
-            $.webxraySettings.session.page = xpath;
-            $.webxraySettings.save();
+            if (i === 1){
+              var focusedElement = focused.getPrimaryElement();
+              var xpath = $(focusedElement).xpath(document.body);
 
-            console.log(xpath);
+              console.log(xpath);
+              console.log(i);
+              console.log(dict);
+            }
+            return;
           }
         },
         {
