@@ -413,6 +413,14 @@
           key: 'F',
           cmd: 'field-extract',
           execute: function () {
+            var focusedElement = focused.getPrimaryElement();
+            //return;
+
+            var xpath = $(focusedElement).xpath(document.body);
+            $.webxraySettings.session.page = xpath;
+            $.webxraySettings.save();
+
+            console.log(xpath);
           }
         },
         {
