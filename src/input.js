@@ -261,12 +261,12 @@
       ], eventSource);
       
       self.add({
-        click: function(event) {
+        /*click: function(event) {
           if (isValidFocusTarget(event.target)) {
             self.commandBindings['field-extract'].execute();
             return true;
           }
-        },
+        },*/
         touchmove: function(event) {
           touchesReceived = true;
           return false;
@@ -413,17 +413,10 @@
           key: 'F',
           cmd: 'field-extract',
           execute: function () {
-            var dict = {'key': [], 'val': []}
+            var focusedElement = focused.getPrimaryElement();
+            var xpath = $(focusedElement).xpath(document.body);
 
-            if (i === 1){
-              var focusedElement = focused.getPrimaryElement();
-              var xpath = $(focusedElement).xpath(document.body);
-
-              console.log(xpath);
-              console.log(i);
-              console.log(dict);
-            }
-            return;
+            console.log(xpath);
           }
         },
         {
