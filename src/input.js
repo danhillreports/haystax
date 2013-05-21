@@ -413,16 +413,22 @@
           key: 'F',
           cmd: 'field-extract',
           execute: function () {
-            var focusedElement = focused.getPrimaryElement();
-            var xpath = $(focusedElement).xpath(document.body);
+            mixMaster.extractField();
+            //var focusedElement = focused.getPrimaryElement();
+            //var field = $(focusedElement).xpath(document.body);
 
-            console.log(xpath);
+            //console.log($(document.body).nodeFromXPath(field));
+            //console.log(focusedElement);
           }
         },
         {
           key: 'D',
           cmd: 'field-detail',
           execute: function () {
+            var focusedElement = focused.getPrimaryElement();
+            var detail = $(focusedElement).xpath(document.body);
+
+            console.log($(document.body).nodeFromXPath(detail));
           }
         },
         {
@@ -440,25 +446,38 @@
           }
         },
         {
+          key: 'U',
+          cmd: 'update',
+          execute: function () {
+            // just see what's happening
+            var session = $.webxraySettings.session;
+            var page = session.page,
+              field = session.field,
+              table = session.table;
+
+            console.log(field);
+            console.log(table);
+          }
+        },
+        {
           key: 'S',
           cmd: 'scrape',
           execute: function () {
             var session = $.webxraySettings.session;
             var count = 0
               , page = session.page
+              , field = session.field
               , table = session.table
-              , result = '';
+              , result = result;
 
             var scrape = function (document) {
-              console.log('scrape is running!');
               var statusMsg = $("<div></div>")
                 .html(
                   jQuery.locale.get("hud-overlay:status-count-html")
                     .replace('__count__', ++count));
               $.transparentMessage(statusMsg);
 
-              var _t = $(document.body).nodeFromXPath(table[0]);
-              //console.log(_t.context.innerHTML);
+              var _t = $(document.body).nodeFromXPath(field[0]);
               if (!_t.length) return;
               result += mixMaster.extractTable(_t[0]);
               console.log('RESULT HERE!' + result);
@@ -475,7 +494,6 @@
 
               if (page) {
                 var _p = $(document.body).nodeFromXPath(page[0]);
-                console.log('hi');
                 console.log(_p);
                 if (!_p.length) return;
 
@@ -518,7 +536,7 @@
                 dialogURL: jQuery.webxraySettings.url("saveDialogURL")
               });
             }
-            //console.log(scrape(document));
+
             scrape(document).done(function () {
               var statusMsg = $("<div></div>")
                 .html(jQuery.locale.get("hud-overlay:status-done-html"));

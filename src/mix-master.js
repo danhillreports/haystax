@@ -138,13 +138,24 @@
       setDialogPageMods: function(mods) {
         dialogPageMods = mods;
       },
+      extractField: function(element) {
+        delete($.webxraySettings.session.table); // get rid of that pesky table
+        var table = $.webxraySettings.session.field;
+        console.log('table' + table);
+        var focusedElement = focused.getPrimaryElement();
+        $.webxraySettings.session.field = $(focusedElement).xpath(focusedElement.ownerDocument.body);
+        console.log($.webxraySettings.session.field);
+        var result = $(focusedElement).text();
+      },
       extractTable: function(element) {
+        delete($.webxraySettings.session.field);
         var focusedElement = element || focused.getPrimaryElement();
         if (!focusedElement)
           return;
 
         if (focusedElement.tagName != 'TABLE') {
           focusedElement = $(focusedElement).parents('table').first().get(0)
+
         }
         if(!focusedElement)
           return;
@@ -163,6 +174,7 @@
           return [row];
         }).get();
 
+        console.log(result);
         var csv = result.map(function (row) {
           return row.join(',');
         }).join('\n');
