@@ -139,7 +139,7 @@
         dialogPageMods = mods;
       },
       extractField: function(element) {
-        delete($.webxraySettings.session.table); // get rid of that pesky table
+        delete($.webxraySettings.session.table); // get rid of pesky table
         var table = $.webxraySettings.session.field;
         console.log('table' + table);
         var focusedElement = focused.getPrimaryElement();
