@@ -4,7 +4,7 @@
 
 After several weeks hacking with and [blogging about](http://knightlab.northwestern.edu/2013/06/14/web-scrapers-for-journalists-haystax-and-other-graphical-interface-systems/) Haystax, it's time for a new approach. Following the Unix philosophy, this repo of Haystax will focus on what it does best, selecting XPaths through a visual interface.
 
-As part of our julython push, we will experiment using Haytax-defined XPaths in other scrapers that we will develop in other repos.
+As part of our julython push, we will experiment using Haytax-defined XPaths in other scrapers that we will develop in other repos. We'll link up those repos when they're ready.
 
 Our goal remains to provide a GUI scraper for non-programmers.
 
