@@ -149,7 +149,11 @@
       },
       showPaths: function() {
         var paths = $.webxraySettings.session;
-        console.log(JSON.stringify(paths));
+        var pathsString = (JSON.stringify(paths));
+
+        var uriContent = "data:application/octet-stream;filename=paths.json," + 
+              encodeURIComponent(pathsString);
+        newWindow=window.open(uriContent, 'paths.json');
       },
       extractTable: function(element) {
         delete($.webxraySettings.session.field);
