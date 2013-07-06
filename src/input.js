@@ -261,12 +261,12 @@
       ], eventSource);
       
       self.add({
-        /*click: function(event) {
+        click: function(event) {
           if (isValidFocusTarget(event.target)) {
             self.commandBindings['field-extract'].execute();
             return true;
           }
-        },*/
+        },
         touchmove: function(event) {
           touchesReceived = true;
           return false;
@@ -450,13 +450,7 @@
           cmd: 'update',
           execute: function () {
             // just see what's happening
-            var session = $.webxraySettings.session;
-            var page = session.page,
-              field = session.field,
-              table = session.table;
-
-            console.log(field);
-            console.log(table);
+            mixMaster.showPaths();
           }
         },
         {

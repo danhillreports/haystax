@@ -147,6 +147,10 @@
         console.log($.webxraySettings.session.field);
         var result = $(focusedElement).text();
       },
+      showPaths: function() {
+        var paths = $.webxraySettings.session;
+        console.log(JSON.stringify(paths));
+      },
       extractTable: function(element) {
         delete($.webxraySettings.session.field);
         var focusedElement = element || focused.getPrimaryElement();
